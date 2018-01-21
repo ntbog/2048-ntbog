@@ -11,7 +11,7 @@ Grading
 -----
 1. Regular Commits (1 point)
 
-You should push at least one nontrivial commit by Jan-27 11:50pm. 
+You should push at least one nontrivial commit by Jan-27 11:59pm. 
 
 2. Documentation (1 points)
 
@@ -23,7 +23,7 @@ The player should be modelled as a max player, and the computer modeled as a cha
 
 Each time, the evaluation function at leaf nodes should be a weighted sum of the following two factors: 
 
-- The points that can be obtained in at the end of simulation (either the total points or just the additional points from the current position). 
+- The points that can be obtained at the end of simulation (either the total points or just the additional points from the current position). 
 - The highest tile that can be achived at the end of the simulation. 
 
 A simple sum may work already, but you can tune the weights and see if they change the performance. 
@@ -48,5 +48,4 @@ Note that engineering the evaluation function, for instance by giving some heuri
 
 Note
 ------
-- Make sure that you start immediately. You can see that significantly more code is required compared to Assignment 1. 
-- At the deadline, Github will automatically save the last commit as your submission. Make sure to commit your full solutions before that. 
+Make sure that you start immediately. You can see that significantly more code is required compared to Assignment 1. At the deadline, Github will automatically save the last commit as your submission. Make sure to commit your full solutions before that. 
