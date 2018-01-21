@@ -9,30 +9,30 @@ Feb-3 11:59pm Pacific Time.
 
 Grading
 -----
-- Regular Commits (1 points)
+1. Regular Commits (1 point)
 
-You should at least one nontrivial commit by Jan-27 11:50pm. 
+You should push at least one nontrivial commit by Jan-27 11:50pm. 
 
-- Documentation (1 points)
+2. Documentation (1 points)
 
 Comment your code generously. 
 
-- Functionality (10 points)
+3. Functionality (10 points)
 
 The player should be modelled as a max player, and the computer modeled as a chance player (picking a random open spot and place a 2-tile). 
 
 Each time, the evaluation function at leaf nodes should be a weighted sum of the following two factors: 
 
--- The points that can be obtained in at the end of simulation (either the total points or just the additional points from the current position). 
--- The highest tile that can be achived at the end of the simulation. 
+- The points that can be obtained in at the end of simulation (either the total points or just the additional points from the current position). 
+- The highest tile that can be achived at the end of the simulation. 
 
-You can tune the weights and see if they change the performance. 
+A simple sum may work already, but you can tune the weights and see if they change the performance. 
 
-In README, write down the statistics of the end score and highest tile for in the following three types of AI (run each 5 times): 
+In README, write down the end score and highest tile that you get by running the following three types of AI (5 times each): 
 
--- Random move. 
--- Computing a depth-1 search tree (i.e., just one max-player move). 
--- Computing a depth-3 search tree (i.e., a max-min-max sequence). 
+- Random move. 
+- Computing a depth-1 search tree (i.e., just one max-player move). 
+- Computing a depth-3 search tree (i.e., a max-min-max sequence). 
 
 Note that you can press "u" at the end of a game to undo the last move and see the last configuration. Check more keyboard options by reading the code. 
 
