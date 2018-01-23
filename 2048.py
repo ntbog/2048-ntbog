@@ -129,6 +129,9 @@ class Game:
 					self.moveTiles()
 	def checkIfCanGo(self):
 		tm = self.tileMatrix
+		for i in range(0, self.board_size ** 2):
+			if tm[int(i / self.board_size)][i % self.board_size] == 0:
+				return True		
 		for i in range(0, self.board_size):
 			for j in range(0, self.board_size - 1):
 				if tm[i][j] == tm[i][j + 1]:
