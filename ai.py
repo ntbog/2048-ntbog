@@ -27,8 +27,9 @@ class Gametree:
 		""" depth - how deep to grow???"""
 		self.depth = depth
 		""" keep track of parenthood?"""
-		self.bigdict = {}
-		pass
+		self.svdict = {}
+		self.pdict = {}
+		
 	def grow_once(self, state):
 #		"""Grow the tree one level deeper"""
 #		""" Deep copy"""
@@ -64,8 +65,10 @@ class Gametree:
 			b = Simulator(a.tileMatrix, a.total_points)
 			b.move(i)
 			if a.tileMatrix != state.tileMatrix:
-				a.pre_move = state
+				a.pre_move = i
 				self.child.append(a)
+				self.svdict[a] = a.total_points
+				self.pdict[state] = a
 			
 	def grow(self, state, height):
 		"""Grow the full tree from root"""
@@ -97,13 +100,29 @@ class Gametree:
 #		grow_once(state)
 
 		""" New try"""
-		n = 0
-		if height == 1:
-			grow_once(state)
-		else:
-			while n < height:
+#		n = 0
+#		if height == 1:
+#			grow_once(state)
+#		else:
+#			while n < height:
+#				grow_once(state)
+#				n = n + 1
+#				for i in self.board_size-1:
+#					for j in self.board_size-1:
+#						""" Check all open chance spots"""
+#						if state.tileMatrix[i][j] == 0:
+#							""" Make copy of original state"""
+#							a = copy.deepcopy(state)
+#							a.tileMatrix[i][j] == 2
+#							grow_once(a)
+#				n = n + 1
+		""" Another try"""
+		while n < height:
+			if (state.player == 'MAX'):
 				grow_once(state)
+				# record dictionary here
 				n = n + 1
+			else:
 				for i in self.board_size-1:
 					for j in self.board_size-1:
 						""" Check all open chance spots"""
@@ -113,7 +132,6 @@ class Gametree:
 							a.tileMatrix[i][j] == 2
 							grow_once(a)
 				n = n + 1
-
 
 	def minimax(self, state):
 		"""Compute minimax values on the three"""
@@ -141,7 +159,8 @@ class Gametree:
 		"""Derive a decision"""
 		#Replace the following decision with what you compute
 		#decision = random.randint(0,3)
-		grow(self.root, self.depth)
+		a = State(self.root, "MAX", 0, 4)
+		Gametree.grow(a, self.depth)
 		minimax(self.root)
 
 		#Should also print the minimax value at the root
