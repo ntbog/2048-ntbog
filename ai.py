@@ -6,12 +6,11 @@ class State:
 	"""game state information"""
 	#Hint: probably need the tile matrix, which player's turn, score, previous move
 	def __init__(self, matrix, player, score, pre_move):
-		self.matrix = matrix
+		self.tileMatrix = matrix
 		self.player = player
-		self.score = score
+		self.total_points = score
 		self.pre_move = pre_move
 
-		
 	def highest_tile(self):
 		"""Return the highest tile here (just a suggestion, you don't have to)"""
 		pass
@@ -22,20 +21,65 @@ class Gametree:
 	#Hint: To grow a tree, you need to simulate the game one step. 
 	#Hint: Think about the difference between your move and the computer's move. 
 	def __init__(self, root, depth):
+		""" root is a tileMatrix"""
+		self.root = root
+		""" depth - how deep to grow???"""
+		self.depth = depth
+		""" keep track of parenthood?"""
+		self.bigdict = {}
 		pass
 	def grow_once(self, state):
 		"""Grow the tree one level deeper"""
-		pass
+		a = state
+		a.total_points = 0
+		#biggest = -1
+		
+		""" Simulate the moves. Shouldn't affect original state"""
+		for i in MOVES:
+			b = Simulator(a.tileMatrix, a.total_points)
+			b.move(i)
+			""" Initialize the state for it, unsure on PLAYER"""
+			aa = State(b.tileMatrix,PLAYER,b.total_points,state)
+			""" Append to dictionary"""
+			bigdict[a,aa] = aa.total_points
+
+			#if b.total_points > biggest:
+			#	biggest = b.total_points
+			#	biggestmove = i
+
+		#""" Now affect the original state"""
+		#c = Simulator(state.tileMatrix, state.total_points)
+		#c.move(biggestmove)
+
+		return bigdict
+			
 	def grow(self, state, height):
 		"""Grow the full tree from root"""
+		""" height determines type of AI: 0 = random move, 1 = depth-1 search aka grow_once, 3 = depth-3 search"""
+		n = 0
+		while n < height:
+			grow_once(state)
+			n = n + 1
+			for i in self.board_size-1:
+				for j in self.board_size-1:
+					"""todo"""
+
+
+
 		pass
 	def minimax(self, state):
 		"""Compute minimax values on the three"""
+		""" state basically refers to the node"""
 		pass
 	def compute_decision(self):
 		"""Derive a decision"""
 		#Replace the following decision with what you compute
 		decision = random.randint(0,3)
+
+		#a = State(self.root,self,0,0)
+		#a.tileMatrix = root
+		#decision = Gametree.grow_once(self,a)
+
 		#Should also print the minimax value at the root
 		print(MOVES[decision])
 		return decision
@@ -46,9 +90,21 @@ class Simulator:
 	#Hint: The GUI code from the game engine should be removed. 
 	#Hint: Be very careful not to mess with the real game states. 
 	def __init__(self, matrix, score):
+		self.tileMatrix = matrix
+		self.total_points = score
+		self.board_size = 4
 		pass
 	def move(self, direction):
-		pass
+		#self.addToUndo()
+		for i in range(0, direction):
+			self.rotateMatrixClockwise()
+		if self.canMove():
+			self.moveTiles()
+			self.mergeTiles()
+			#self.placeRandomTile()
+		for j in range(0, (4 - direction) % 4):
+			self.rotateMatrixClockwise()
+		#self.printMatrix()
 	def moveTiles(self):
 		tm = self.tileMatrix
 		for i in range(0, self.board_size):
@@ -57,7 +113,6 @@ class Simulator:
 					for k in range(j, self.board_size - 1):
 						tm[i][k] = tm[i][k + 1]
 					tm[i][self.board_size - 1] = 0
-		
 	def mergeTiles(self):
 		tm = self.tileMatrix
 		for i in range(0, self.board_size):
@@ -67,7 +122,6 @@ class Simulator:
 					tm[i][k + 1] = 0
 					self.total_points += tm[i][k]
 					self.moveTiles()
-		
 	def checkIfCanGo(self):
 		tm = self.tileMatrix
 		for i in range(0, self.board_size ** 2):
@@ -80,7 +134,6 @@ class Simulator:
 				elif tm[j][i] == tm[j + 1][i]:
 					return True
 		return False
-		
 	def canMove(self):
 		tm = self.tileMatrix
 		for i in range(0, self.board_size):
@@ -90,7 +143,6 @@ class Simulator:
 				elif (tm[i][j-1] == tm[i][j]) and tm[i][j-1] != 0:
 					return True
 		return False
-		
 	def rotateMatrixClockwise(self):	
 		tm = self.tileMatrix
 		for i in range(0, int(self.board_size/2)):
@@ -102,11 +154,10 @@ class Simulator:
 				tm[self.board_size - 1 - k][i] = temp1
 				tm[self.board_size - 1 - i][self.board_size - 1 - k] = temp2
 				tm[k][self.board_size - 1 - i] = temp3
-				tm[i][k] = temp4	
+				tm[i][k] = temp4		
 	def convertToLinearMatrix(self):
 		m = []
 		for i in range(0, self.board_size ** 2):
 			m.append(self.tileMatrix[int(i / self.board_size)][i % self.board_size])
 		m.append(self.total_points)
 		return m
-		
