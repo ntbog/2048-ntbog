@@ -10,6 +10,7 @@ class State:
 		self.player = player
 		self.total_points = score
 		self.pre_move = pre_move
+		self.child[] = []
 
 	def highest_tile(self):
 		"""Return the highest tile here (just a suggestion, you don't have to)"""
@@ -29,44 +30,90 @@ class Gametree:
 		self.bigdict = {}
 		pass
 	def grow_once(self, state):
-		"""Grow the tree one level deeper"""
-		a = state
-		a.total_points = 0
-		#biggest = -1
-		
-		""" Simulate the moves. Shouldn't affect original state"""
+#		"""Grow the tree one level deeper"""
+#		""" Deep copy"""
+#		a = copy.deepcopy(state)
+#		a.total_points = 0
+#		biggest = -1
+#		
+#		""" Simulate the moves. Shouldn't affect original state"""
+#		""" because we explicitly make a copy"""
+#		for i in MOVES:
+#			b = Simulator(a.tileMatrix, a.total_points)
+#			""" *Need to see if this syntax is done correctly*"""
+#			if canMove():
+#				b.move(i)
+#				""" Initialize the state for it, unsure on PLAYER"""
+#				#aa = State(b.tileMatrix,PLAYER,b.total_points,state)
+#				""" Append to dictionary"""
+#				#bigdict[a,aa] = aa.total_points
+#
+#				""" Record highest outcome"""
+#				if b.total_points > biggest:
+#					biggest = b.total_points
+#					biggestmove = i
+#
+#		""" Now affect the original state"""
+#		c = Simulator(state.tileMatrix, state.total_points)
+#		c.move(biggestmove)
+#		""" Where it came from"""
+#		state.pre_move = i
+
 		for i in MOVES:
+			a = copy.deepcopy(state)
 			b = Simulator(a.tileMatrix, a.total_points)
 			b.move(i)
-			""" Initialize the state for it, unsure on PLAYER"""
-			aa = State(b.tileMatrix,PLAYER,b.total_points,state)
-			""" Append to dictionary"""
-			bigdict[a,aa] = aa.total_points
-
-			#if b.total_points > biggest:
-			#	biggest = b.total_points
-			#	biggestmove = i
-
-		#""" Now affect the original state"""
-		#c = Simulator(state.tileMatrix, state.total_points)
-		#c.move(biggestmove)
-
-		return bigdict
+			a.pre_move = state
+			self.child.append(a)
 			
 	def grow(self, state, height):
 		"""Grow the full tree from root"""
-		""" height determines type of AI: 0 = random move, 1 = depth-1 search aka grow_once, 3 = depth-3 search"""
+#		""" height determines type of AI: 0 = random move, 1 = depth-1 search aka grow_once, 3 = depth-3 search"""
+#		#n = 0
+#		#count = 0
+#		biggest = -1
+#		biggestmove = -1
+#		#while n < height:
+#		""" Max player"""
+#		grow_once(state)
+#		#n = n + 1
+#		""" Chance player"""
+#		for i in self.board_size-1:
+#			for j in self.board_size-1:
+#				""" Check all open chance spots"""
+#				if state.tileMatrix[i][j] == 0:
+#					""" Make copy of original state"""
+#					a = state
+#					a.tileMatrix[i][j] == 2
+#					grow_once(a)
+#					if (a.total_points > biggest):
+#						biggest = a.total_points
+#						#biggestmove = a.pre_move
+#						biggesti = i
+#						biggestj = j
+#		state.tileMatrix[biggesti][biggestj] = 2
+#		""" Max player"""
+#		grow_once(state)
+
+		""" New try"""
 		n = 0
-		while n < height:
+		if height = 1:
 			grow_once(state)
-			n = n + 1
-			for i in self.board_size-1:
-				for j in self.board_size-1:
-					"""todo"""
+		else:
+			while n < height:
+				grow_once(state)
+				n = n + 1
+				for i in self.board_size-1:
+					for j in self.board_size-1:
+						""" Check all open chance spots"""
+						if state.tileMatrix[i][j] == 0:
+							""" Make copy of original state"""
+							a = copy.deepcopy(state)
+							a.tileMatrix[i][j] == 2
+							grow_once(a)
+				n = n + 1
 
 
-
-		pass
 	def minimax(self, state):
 		"""Compute minimax values on the three"""
 		""" state basically refers to the node"""
