@@ -76,7 +76,7 @@ class Gametree:
 			value = -infinity
 			for n in MOVES:
 				value = max(value,Simulator(self.root,value).total_points)
-		return value
+			return value
 		elif state.player == chance_player:
 			value = 0
 			count = 0
@@ -86,9 +86,9 @@ class Gametree:
 						count = count + 1
 			for n in MOVES:
 				value = value + Gametree.minimax(state)*(1/count)
+			return value
 		else:
 			error
-		return value
 	def compute_decision(self):
 		"""Derive a decision"""
 		#Replace the following decision with what you compute
