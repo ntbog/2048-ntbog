@@ -10,7 +10,7 @@ class State:
 		self.player = player
 		self.total_points = score
 		self.pre_move = pre_move
-		self.child[] = []
+		self.child = []
 
 	def highest_tile(self):
 		"""Return the highest tile here (just a suggestion, you don't have to)"""
@@ -63,8 +63,9 @@ class Gametree:
 			a = copy.deepcopy(state)
 			b = Simulator(a.tileMatrix, a.total_points)
 			b.move(i)
-			a.pre_move = state
-			self.child.append(a)
+			if a.tileMatrix != state.tileMatrix:
+				a.pre_move = state
+				self.child.append(a)
 			
 	def grow(self, state, height):
 		"""Grow the full tree from root"""
@@ -97,7 +98,7 @@ class Gametree:
 
 		""" New try"""
 		n = 0
-		if height = 1:
+		if height == 1:
 			grow_once(state)
 		else:
 			while n < height:
@@ -117,33 +118,31 @@ class Gametree:
 	def minimax(self, state):
 		"""Compute minimax values on the three"""
 		""" state basically refers to the node"""
-		if not canMove(state):
+		if state.child == []:
 			return state.total_points
 		elif state.player == max_player:
-			value = -infinity
-			for n in MOVES:
-				value = max(value,Simulator(self.root,value).total_points)
+			value = float('-inf')
+			for n in state.child:
+				value = max(value, minimax(n))
 			return value
 		elif state.player == chance_player:
 			value = 0
-			count = 0
-			for i in self.board_size-1:
-				for j in self.board_size-1:
-					if state.tileMatrix[i][j] == 0:
-						count = count + 1
-			for n in MOVES:
-				value = value + Gametree.minimax(state)*(1/count)
+			for n in state.child:
+				count = 0
+				for i in self.board_size-1:
+					for j in self.board_size-1:
+						if n.tileMatrix[i][j] == 0:
+							count = count + 1
+				value = value + minimax(n)*(1/count)
 			return value
 		else:
 			error
 	def compute_decision(self):
 		"""Derive a decision"""
 		#Replace the following decision with what you compute
-		decision = random.randint(0,3)
-
-		#a = State(self.root,self,0,0)
-		#a.tileMatrix = root
-		#decision = Gametree.grow_once(self,a)
+		#decision = random.randint(0,3)
+		grow(self.root, self.depth)
+		minimax(self.root)
 
 		#Should also print the minimax value at the root
 		print(MOVES[decision])
