@@ -70,7 +70,25 @@ class Gametree:
 	def minimax(self, state):
 		"""Compute minimax values on the three"""
 		""" state basically refers to the node"""
-		pass
+		if not canMove(state):
+			return state.total_points
+		elif state.player == max_player:
+			value = -infinity
+			for n in MOVES:
+				value = max(value,Simulator(self.root,value).total_points)
+		return value
+		elif state.player == chance_player:
+			value = 0
+			count = 0
+			for i in self.board_size-1:
+				for j in self.board_size-1:
+					if state.tileMatrix[i][j] == 0:
+						count = count + 1
+			for n in MOVES:
+				value = value + Gametree.minimax(state)*(1/count)
+		else:
+			error
+		return value
 	def compute_decision(self):
 		"""Derive a decision"""
 		#Replace the following decision with what you compute
