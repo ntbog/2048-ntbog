@@ -178,13 +178,7 @@ class Gametree:
 			value = 0
 			count = -1
 			for n in state.child:
-				if (count == -1):
-					count = 0
-					for i in range(self.board_size):
-						for j in range(self.board_size):
-							if n.tileMatrix[i][j] == 0:
-								count = count + 1
-					print(count)
+				count = len(state.child)
 				if count > 0:
 					value = value + self.minimax(n)*((1.0)/float(count))
 			self.svdict[state] = value
