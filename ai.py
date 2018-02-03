@@ -50,7 +50,7 @@ class Gametree:
 				b = Simulator(copy.deepcopy(state.tileMatrix),state.total_points)
 				#a.total_points = b.total_points
 				
-				print ('before move: %d',b.total_points)
+				#print ('before move: %d',b.total_points)
 				for j in range(0, i):
 					b.rotateMatrixClockwise()
 				if b.canMove():
@@ -176,13 +176,16 @@ class Gametree:
 			return value
 		elif state.player == 'CHANCE':
 			value = 0
+			count = -1
 			for n in state.child:
-				count = 0
-				for i in range(self.board_size):
-					for j in range(self.board_size):
-						if n.tileMatrix[i][j] == 0:
-							count = count + 1
-				if count != 0:
+				if (count == -1):
+					count = 0
+					for i in range(self.board_size):
+						for j in range(self.board_size):
+							if n.tileMatrix[i][j] == 0:
+								count = count + 1
+					print(count)
+				if count > 0:
 					value = value + self.minimax(n)*((1.0)/float(count))
 			self.svdict[state] = value
 			return value
