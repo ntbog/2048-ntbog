@@ -11,6 +11,7 @@ class State:
 		self.total_points = score
 		self.pre_move = pre_move
 		self.child = []
+		self.child2 = []
 
 	def highest_tile(self):
 		"""Return the highest tile here (just a suggestion, you don't have to)"""
@@ -37,43 +38,69 @@ class Gametree:
 		""" Keep track of parenthood"""
 		self.pdict = {}
 		self.board_size = 4
+		#self.treechild = []
+		self.terminal = []
 		
 	def grow_once(self, state):
-
-		for i in MOVES:
-			#a = copy.deepcopy(state)
-			#b = Simulator(a.tileMatrix, a.total_points)
-			b = Simulator(copy.deepcopy(state.tileMatrix),state.total_points)
-			#a.total_points = b.total_points
-			
-			for j in range(0, i):
-				b.rotateMatrixClockwise()
-			if b.canMove():
-
-			#b.move(i)
-			#Check if canMove in a different way
-			
-			#if b.tileMatrix == state.tileMatrix:
-			#	continue
-			#elif not b.canMove():
-			#	continue
-			#else:
-			#if (self.checkequal(state.tileMatrix,a.tileMatrix)):
-
-				a = State(b.tileMatrix,'CHANCE',b.total_points,i)
+		children = []
+		if state.player == 'MAX':
+			for i in MOVES:
+				#a = copy.deepcopy(state)
+				#b = Simulator(a.tileMatrix, a.total_points)
+				b = Simulator(copy.deepcopy(state.tileMatrix),state.total_points)
 				#a.total_points = b.total_points
-				#a.pre_move = i
-				#if state.player == 'MAX':
-				#	a.player = 'CHANCE'
+				
+				for j in range(0, i):
+					b.rotateMatrixClockwise()
+				if b.canMove():
+				#b.move(i)
+				#if b.canMove():
+
+				#b.move(i)
+				#Check if canMove in a different way
+				
+				#if b.tileMatrix == state.tileMatrix:
+				#	continue
+				#elif not b.canMove():
+				#	continue
 				#else:
-				#	a.player = 'MAX'
-				""" Line below is the problem"""
-				state.child.append(a)
-				""" State is key with total_points as value"""
-				#self.svdict[a] = a.total_points
-				""" Child is key with Parent as value"""
-				self.pdict[a] = state
-				print('4')
+				#if (self.checkequal(state.tileMatrix,a.tileMatrix)):
+
+					a = State(b.tileMatrix,'CHANCE',b.total_points,i)
+					#a.total_points = b.total_points
+					#a.pre_move = i
+					#if state.player == 'MAX':
+					#	a.player = 'CHANCE'
+					#else:
+					#	a.player = 'MAX'
+					""" Line below is the problem"""
+					state.child.append(a)
+					children.append(a)
+					#self.treechild.append(a)
+					""" State is key with total_points as value"""
+					#self.svdict[a] = a.total_points
+					""" Child is key with Parent as value"""
+					self.pdict[a] = state
+					print('4')
+			if children == []:
+				self.terminal.append(state)			
+
+		else:
+			for i in range(self.board_size):
+					for j in range(self.board_size):
+						""" Check all open chance spots"""
+						if state.tileMatrix[i][j] == 0:
+							""" Make copy of original state"""
+							#a = copy.deepcopy(state)
+							a = State(copy.deepcopy(state.tileMatrix),'MAX',state.total_points,6)
+							a.tileMatrix[i][j] == 2
+							#a.player = 'MAX'
+							state.child.append(a)
+							children.append(a)
+							#self.treechild.append(a)
+							self.pdict[a] = state
+		return children
+
 	""" Not used - check if matrix are equal, similarly used like canMove"""
 	def checkequal(self,m1,m2):
 		for i in range(self.board_size):
@@ -92,41 +119,44 @@ class Gametree:
 		print('in Grow')
 
 		if height == 0:
+			self.terminal.append(state)
 			return
 
 		else:
-			if (state.player == 'MAX'):
-				self.grow_once(state)
+			#if (state.player == 'MAX'):
+			children = self.grow_once(state)
 				# record dictionary here
 				#n = n + 1
 				#height = height - 1
 				#for i in state.child:
 				#	self.grow(i,height)
-			else:
-				for i in range(self.board_size):
-					for j in range(self.board_size):
-						""" Check all open chance spots"""
-						if state.tileMatrix[i][j] == 0:
-							""" Make copy of original state"""
-							#a = copy.deepcopy(state)
-							a = State(copy.deepcopy(state.tileMatrix),'MAX',state.total_points,6)
-							a.tileMatrix[i][j] == 2
-							#a.player = 'MAX'
-							state.child.append(a)
-							self.pdict[a] = state
-							#height = height - 1
-							#self.grow_once(a)
-				#n = n + 1
+			#else:
+			#	for i in range(self.board_size):
+			#		for j in range(self.board_size):
+			#			""" Check all open chance spots"""
+			#			if state.tileMatrix[i][j] == 0:
+			#				""" Make copy of original state"""
+			#				#a = copy.deepcopy(state)
+			#				a = State(copy.deepcopy(state.tileMatrix),'MAX',state.total_points,6)
+			#				a.tileMatrix[i][j] == 2
+			#				#a.player = 'MAX'
+			#				state.child.append(a)
+			#				self.treechild.append(a)
+			#				self.pdict[a] = state
+			#				#height = height - 1
+			#				#self.grow_once(a)
+			#	#n = n + 1
 
 			height = height - 1
-			for i in state.child:
+			for i in children:
+			#for i in self.treechild:
 				self.grow(i,height)
 
 	def minimax(self, state):
 		"""Compute minimax values on the three"""
 		""" state basically refers to the node"""
 		print('in minimax')
-		if state.child == []:
+		if state in self.terminal:
 			print('terminal')
 			#return (state.total_points+((state.highest_tile())/float(3)))
 			#return state.total_points + (0.3*(state.highest_tile()))
@@ -219,6 +249,7 @@ class Simulator:
 		self.board_size = 4
 		
 	def move(self, direction):
+		#if self.checkIfCanGo() == True:
 		#self.addToUndo()
 		for i in range(0, direction):
 			self.rotateMatrixClockwise()
