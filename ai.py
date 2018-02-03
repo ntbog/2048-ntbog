@@ -64,10 +64,17 @@ class Gametree:
 			a = copy.deepcopy(state)
 			b = Simulator(a.tileMatrix, a.total_points)
 			b.move(i)
+			""" Check if canMove in a different way"""
 			if a.tileMatrix != state.tileMatrix:
 				a.pre_move = i
+				if state.player == 'MAX':
+					a.player = 'CHANCE'
+				else:
+					a.player = 'MAX'
 				self.child.append(a)
+				""" State is key with total_points as value"""
 				self.svdict[a] = a.total_points
+				""" Parent is key with child as value"""
 				self.pdict[state] = a
 			
 	def grow(self, state, height):
@@ -159,9 +166,16 @@ class Gametree:
 		"""Derive a decision"""
 		#Replace the following decision with what you compute
 		#decision = random.randint(0,3)
-		a = State(self.root, "MAX", 0, 4)
+		a = State(self.root, 'MAX', 0, 4)
 		Gametree.grow(a, self.depth)
-		minimax(self.root)
+		myvalue = minimax(self.root)
+		for key,val in svdict:
+			if myvalue == val:
+				"""  key should hold the state with minimax value"""
+				while key != a:
+					for k,v in pdict:
+						
+
 
 		#Should also print the minimax value at the root
 		print(MOVES[decision])
