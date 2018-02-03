@@ -1,10 +1,17 @@
 Current situation - program freezes but still runs infinitely somehow
+
 It keeps staying within the while loop at line 235
+
 Returning 1 at line 237 after "print('layer3')" stops the program but with a deepcopy error
+
 It needs to run for a while until we start seeing the prints, varies with computer strength
+
 Initially it'll freeze and if you wait long enough it'll print the statement inside the grow function, a lot
+
 eventually does make its way to the minimax print statements, which it prints a lot
+
 And finally reaches the while loop at 235 and prints "layer3", a lot
+
 
 Assignment 2: 2048
 =========
