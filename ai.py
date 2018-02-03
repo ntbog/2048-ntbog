@@ -84,7 +84,7 @@ class Gametree:
 					#self.svdict[a] = a.total_points
 					""" Child is key with Parent as value"""
 					self.pdict[a] = state
-					#print('4')
+					print('Grow MAX')
 			if not children:
 				self.terminal.append(state)			
 
@@ -102,6 +102,7 @@ class Gametree:
 							children.append(a)
 							#self.treechild.append(a)
 							self.pdict[a] = state
+							print('Grow CHANCE')
 		return children
 
 	""" Not used - check if matrix are equal, similarly used like canMove"""
@@ -176,7 +177,6 @@ class Gametree:
 			return value
 		elif state.player == 'CHANCE':
 			value = 0
-			count = -1
 			for n in state.child:
 				count = len(state.child)
 				if count > 0:
@@ -224,7 +224,7 @@ class Gametree:
 				#			return k.pre_move
 		for j in a.child:
 			print('layer3')
-			if j.total_points == myvalue:
+			if float(j.total_points) == float(myvalue):
 				print('layer4')
 				print(MOVES[j.pre_move])
 				return j.pre_move
