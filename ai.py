@@ -11,7 +11,7 @@ class State:
 		self.total_points = score
 		self.pre_move = pre_move
 		self.child = []
-		self.child2 = []
+		#self.child2 = []
 
 	def highest_tile(self):
 		"""Return the highest tile here (just a suggestion, you don't have to)"""
@@ -50,22 +50,25 @@ class Gametree:
 				b = Simulator(copy.deepcopy(state.tileMatrix),state.total_points)
 				#a.total_points = b.total_points
 				
+				print ('before move: %d',b.total_points)
 				for j in range(0, i):
 					b.rotateMatrixClockwise()
 				if b.canMove():
 				#b.move(i)
+				#print ('after move: %d',b.total_points)
 				#if b.canMove():
-
+					#print ('after move: %d',b.total_points)
 				#b.move(i)
 				#Check if canMove in a different way
 				
-				#if b.tileMatrix == state.tileMatrix:
+				#if b.tileMatrix != state.tileMatrix:
+				#	print ('after can move')
 				#	continue
 				#elif not b.canMove():
 				#	continue
 				#else:
 				#if (self.checkequal(state.tileMatrix,a.tileMatrix)):
-
+					#b.move(i)
 					a = State(b.tileMatrix,'CHANCE',b.total_points,i)
 					#a.total_points = b.total_points
 					#a.pre_move = i
@@ -81,8 +84,8 @@ class Gametree:
 					#self.svdict[a] = a.total_points
 					""" Child is key with Parent as value"""
 					self.pdict[a] = state
-					print('4')
-			if children == []:
+					#print('4')
+			if not children:
 				self.terminal.append(state)			
 
 		else:
@@ -116,10 +119,11 @@ class Gametree:
 		#n = 0
 		#while n < height:
 
-		print('in Grow')
+		#print('in Grow')
 
 		if height == 0:
 			self.terminal.append(state)
+			#state.total_points = state.total_points - 10000
 			return
 
 		else:
@@ -155,15 +159,15 @@ class Gametree:
 	def minimax(self, state):
 		"""Compute minimax values on the three"""
 		""" state basically refers to the node"""
-		print('in minimax')
+		#print('in minimax')
 		if state in self.terminal:
-			print('terminal')
+			#print('terminal')
 			#return (state.total_points+((state.highest_tile())/float(3)))
 			#return state.total_points + (0.3*(state.highest_tile()))
 			return state.total_points
 		elif state.player == 'MAX':
 			value = float('-inf')
-			print('elif MAX player')
+			#print('elif MAX player')
 			for n in state.child:
 				value = max(value, self.minimax(n))
 				#self.svdict[state] = value
@@ -309,7 +313,7 @@ class Simulator:
 				tm[self.board_size - 1 - k][i] = temp1
 				tm[self.board_size - 1 - i][self.board_size - 1 - k] = temp2
 				tm[k][self.board_size - 1 - i] = temp3
-				tm[i][k] = temp4		
+				tm[i][k] = temp4	
 	def convertToLinearMatrix(self):
 		m = []
 		for i in range(0, self.board_size ** 2):
