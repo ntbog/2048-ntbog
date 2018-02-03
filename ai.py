@@ -87,7 +87,7 @@ class Gametree:
 				""" Child is key with Parent as value"""
 				self.pdict[a] = state
 				print('4')
-			
+	""" Not used - check if matrix are equal, similarly used like canMove"""
 	def checkequal(self,m1,m2):
 		for i in range(self.board_size):
 			for j in range(self.board_size):
