@@ -51,17 +51,17 @@ class Gametree:
 				#a.total_points = b.total_points
 				
 				#print ('before move: %d',b.total_points)
-				for j in range(0, i):
-					b.rotateMatrixClockwise()
-				if b.canMove():
+				#for j in range(0, i):
+				#	b.rotateMatrixClockwise()
+				#if b.canMove():
 				#b.move(i)
 				#print ('after move: %d',b.total_points)
 				#if b.canMove():
 					#print ('after move: %d',b.total_points)
-				#b.move(i)
+				b.move(i)
 				#Check if canMove in a different way
 				
-				#if b.tileMatrix != state.tileMatrix:
+				if b.tileMatrix != state.tileMatrix:
 				#	print ('after can move')
 				#	continue
 				#elif not b.canMove():
@@ -199,12 +199,12 @@ class Gametree:
 		myvalue = self.minimax(a)
 		print('layer 0')
 		#return 2
-		for key,val in self.svdict.items():
-			print('layer 1')
-			if myvalue == val:
-				print('layer 2')
-				""" key should hold the state with minimax value"""
-				""" *Need logic to return the parent's child whose path is minimax"""
+		#for key,val in self.svdict.items():
+		#	print('layer 1')
+		#	if myvalue == val:
+		#		print('layer 2')
+		#		""" key should hold the state with minimax value"""
+		#		""" *Need logic to return the parent's child whose path is minimax"""
 				#while key != a:
 				#	""" v should be the child of the root whose path is minimax"""
 				#	for k,v in self.pdict.items():
@@ -222,12 +222,12 @@ class Gametree:
 				#		if key == a:
 				#			print(MOVES[k.pre_move])
 				#			return k.pre_move
-				for j in a.child:
-					print('layer3')
-					if j.total_points == val:
-						print('layer4')
-						print(MOVES[j.pre_move])
-						return j.pre_move
+		for j in a.child:
+			print('layer3')
+			if j.total_points == myvalue:
+				print('layer4')
+				print(MOVES[j.pre_move])
+				return j.pre_move
 
 		print('catch')
 		#return 1
