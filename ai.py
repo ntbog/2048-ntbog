@@ -14,7 +14,13 @@ class State:
 
 	def highest_tile(self):
 		"""Return the highest tile here (just a suggestion, you don't have to)"""
-		pass
+		self.high = 0
+		for i in range(4):
+			for j in range(4):
+				if self.high < self.tileMatrix[i][j]:
+					self.high = self.tileMatrix[i][j]
+
+		return self.high
 
 class Gametree:
 	"""main class for the AI"""
@@ -33,39 +39,13 @@ class Gametree:
 		self.board_size = 4
 		
 	def grow_once(self, state):
-#		"""Grow the tree one level deeper"""
-#		""" Deep copy"""
-#		a = copy.deepcopy(state)
-#		a.total_points = 0
-#		biggest = -1
-#		
-#		""" Simulate the moves. Shouldn't affect original state"""
-#		""" because we explicitly make a copy"""
-#		for i in MOVES:
-#			b = Simulator(a.tileMatrix, a.total_points)
-#			""" *Need to see if this syntax is done correctly*"""
-#			if canMove():
-#				b.move(i)
-#				""" Initialize the state for it, unsure on PLAYER"""
-#				#aa = State(b.tileMatrix,PLAYER,b.total_points,state)
-#				""" Append to dictionary"""
-#				#bigdict[a,aa] = aa.total_points
-#
-#				""" Record highest outcome"""
-#				if b.total_points > biggest:
-#					biggest = b.total_points
-#					biggestmove = i
-#
-#		""" Now affect the original state"""
-#		c = Simulator(state.tileMatrix, state.total_points)
-#		c.move(biggestmove)
-#		""" Where it came from"""
-#		state.pre_move = i
 
 		for i in MOVES:
-			a = copy.deepcopy(state)
-			b = Simulator(a.tileMatrix, a.total_points)
-			a.total_points = b.total_points
+			#a = copy.deepcopy(state)
+			#b = Simulator(a.tileMatrix, a.total_points)
+			b = Simulator(copy.deepcopy(state.tileMatrix),state.total_points)
+			#a.total_points = b.total_points
+			
 			for j in range(0, i):
 				b.rotateMatrixClockwise()
 			if b.canMove():
@@ -73,13 +53,20 @@ class Gametree:
 			#b.move(i)
 			#Check if canMove in a different way
 			
-			#if a.tileMatrix != state.tileMatrix:
+			#if b.tileMatrix == state.tileMatrix:
+			#	continue
+			#elif not b.canMove():
+			#	continue
+			#else:
 			#if (self.checkequal(state.tileMatrix,a.tileMatrix)):
-				a.pre_move = i
-				if state.player == 'MAX':
-					a.player = 'CHANCE'
-				else:
-					a.player = 'MAX'
+
+				a = State(b.tileMatrix,'CHANCE',b.total_points,i)
+				#a.total_points = b.total_points
+				#a.pre_move = i
+				#if state.player == 'MAX':
+				#	a.player = 'CHANCE'
+				#else:
+				#	a.player = 'MAX'
 				""" Line below is the problem"""
 				state.child.append(a)
 				""" State is key with total_points as value"""
@@ -97,50 +84,7 @@ class Gametree:
 
 	def grow(self, state, height):
 		"""Grow the full tree from root"""
-#		""" height determines type of AI: 0 = random move, 1 = depth-1 search aka grow_once, 3 = depth-3 search"""
-#		#n = 0
-#		#count = 0
-#		biggest = -1
-#		biggestmove = -1
-#		#while n < height:
-#		""" Max player"""
-#		grow_once(state)
-#		#n = n + 1
-#		""" Chance player"""
-#		for i in self.board_size-1:
-#			for j in self.board_size-1:
-#				""" Check all open chance spots"""
-#				if state.tileMatrix[i][j] == 0:
-#					""" Make copy of original state"""
-#					a = state
-#					a.tileMatrix[i][j] == 2
-#					grow_once(a)
-#					if (a.total_points > biggest):
-#						biggest = a.total_points
-#						#biggestmove = a.pre_move
-#						biggesti = i
-#						biggestj = j
-#		state.tileMatrix[biggesti][biggestj] = 2
-#		""" Max player"""
-#		grow_once(state)
 
-		""" New try"""
-#		n = 0
-#		if height == 1:
-#			grow_once(state)
-#		else:
-#			while n < height:
-#				grow_once(state)
-#				n = n + 1
-#				for i in self.board_size-1:
-#					for j in self.board_size-1:
-#						""" Check all open chance spots"""
-#						if state.tileMatrix[i][j] == 0:
-#							""" Make copy of original state"""
-#							a = copy.deepcopy(state)
-#							a.tileMatrix[i][j] == 2
-#							grow_once(a)
-#				n = n + 1
 		""" Another try"""
 		#n = 0
 		#while n < height:
@@ -164,9 +108,10 @@ class Gametree:
 						""" Check all open chance spots"""
 						if state.tileMatrix[i][j] == 0:
 							""" Make copy of original state"""
-							a = copy.deepcopy(state)
+							#a = copy.deepcopy(state)
+							a = State(copy.deepcopy(state.tileMatrix),'MAX',state.total_points,6)
 							a.tileMatrix[i][j] == 2
-							a.player = 'MAX'
+							#a.player = 'MAX'
 							state.child.append(a)
 							self.pdict[a] = state
 							#height = height - 1
@@ -183,6 +128,8 @@ class Gametree:
 		print('in minimax')
 		if state.child == []:
 			print('terminal')
+			#return (state.total_points+((state.highest_tile())/float(3)))
+			#return state.total_points + (0.3*(state.highest_tile()))
 			return state.total_points
 		elif state.player == 'MAX':
 			value = float('-inf')
@@ -201,7 +148,9 @@ class Gametree:
 					for j in range(self.board_size):
 						if n.tileMatrix[i][j] == 0:
 							count = count + 1
-				value = value + self.minimax(n)*((1.0)/float(count))
+				if count != 0:
+					value = value + self.minimax(n)*((1.0)/float(count))
+			self.svdict[state] = value
 			return value
 		else:
 			print('Error')
@@ -232,15 +181,22 @@ class Gametree:
 				#		if key == a:
 				#			print(MOVES[v.pre_move])
 				#			return v.pre_move
-				while key != a:
+
+				#while key != a:
+				#	print('layer3')
+				#	#return 1
+				#	for k,v in self.pdict.items():
+				#		if key == k:
+				#			key = v
+				#		if key == a:
+				#			print(MOVES[k.pre_move])
+				#			return k.pre_move
+				for j in a.child:
 					print('layer3')
-					#return 1
-					for k,v in self.pdict.items():
-						if key == k:
-							key = v
-						if key == a:
-							print(MOVES[k.pre_move])
-							return k.pre_move
+					if j.total_points == val:
+						print('layer4')
+						print(MOVES[j.pre_move])
+						return j.pre_move
 
 		print('catch')
 		#return 1
