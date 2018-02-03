@@ -26,8 +26,9 @@ class Gametree:
 		self.root = root
 		""" depth - how deep to grow???"""
 		self.depth = depth
-		""" keep track of parenthood?"""
+		""" keep track of state with value"""
 		self.svdict = {}
+		""" Keep track of parenthood"""
 		self.pdict = {}
 		
 	def grow_once(self, state):
@@ -171,15 +172,23 @@ class Gametree:
 		myvalue = minimax(self.root)
 		for key,val in svdict:
 			if myvalue == val:
-				"""  key should hold the state with minimax value"""
+				""" key should hold the state with minimax value"""
+				""" *Need logic to return the parent's child whose path is minimax"""
 				while key != a:
+					""" v should be the child of the root whose path is minimax"""
 					for k,v in pdict:
+						key = k
+						if key == a:
+							print(MOVES[decision])
+							return v.pre_move
+
+					
 						
 
 
 		#Should also print the minimax value at the root
-		print(MOVES[decision])
-		return decision
+		#print(MOVES[decision])
+		#return decision
 
 class Simulator:
 	"""Simulation of the game"""
