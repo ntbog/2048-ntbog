@@ -246,7 +246,6 @@ class Gametree:
 		#return 1
 
 
-					
 						
 
 
