@@ -30,6 +30,7 @@ class Gametree:
 		self.svdict = {}
 		""" Keep track of parenthood"""
 		self.pdict = {}
+		self.board_size = 4
 		
 	def grow_once(self, state):
 #		"""Grow the tree one level deeper"""
@@ -64,19 +65,24 @@ class Gametree:
 		for i in MOVES:
 			a = copy.deepcopy(state)
 			b = Simulator(a.tileMatrix, a.total_points)
-			b.move(i)
-			""" Check if canMove in a different way"""
-			if a.tileMatrix != state.tileMatrix:
+			a.total_points = b.total_points
+			for j in range(0, i):
+				b.rotateMatrixClockwise()
+			if b.canMove():
+
+				#b.move(i)
+				""" Check if canMove in a different way"""
+				#if a.tileMatrix != state.tileMatrix:
 				a.pre_move = i
 				if state.player == 'MAX':
 					a.player = 'CHANCE'
 				else:
 					a.player = 'MAX'
-				self.child.append(a)
+				state.child.append(a)
 				""" State is key with total_points as value"""
-				self.svdict[a] = a.total_points
-				""" Parent is key with child as value"""
-				self.pdict[state] = a
+				#self.svdict[a] = a.total_points
+				""" Child is key with Parent as value"""
+				self.pdict[a] = state
 			
 	def grow(self, state, height):
 		"""Grow the full tree from root"""
@@ -125,62 +131,106 @@ class Gametree:
 #							grow_once(a)
 #				n = n + 1
 		""" Another try"""
-		while n < height:
+		#n = 0
+		#while n < height:
+
+		print('test')
+
+		if height == 0:
+			return
+
+		else:
 			if (state.player == 'MAX'):
-				grow_once(state)
+				self.grow_once(state)
 				# record dictionary here
-				n = n + 1
+				#n = n + 1
+				height = height - 1
+				for i in state.child:
+					self.grow(i,height)
 			else:
-				for i in self.board_size-1:
-					for j in self.board_size-1:
+				for i in range(self.board_size):
+					for j in range(self.board_size):
 						""" Check all open chance spots"""
 						if state.tileMatrix[i][j] == 0:
 							""" Make copy of original state"""
 							a = copy.deepcopy(state)
 							a.tileMatrix[i][j] == 2
-							grow_once(a)
-				n = n + 1
+							a.player = 'MAX'
+							state.child.append(a)
+							self.pdict[a] = state
+							height = height - 1
+							#self.grow_once(a)
+				#n = n + 1
+
+			#height = height - 1
+			#for i in state.child:
+				#self.grow(i,height)
 
 	def minimax(self, state):
 		"""Compute minimax values on the three"""
 		""" state basically refers to the node"""
 		if state.child == []:
 			return state.total_points
-		elif state.player == max_player:
+		elif state.player == 'MAX':
 			value = float('-inf')
 			for n in state.child:
-				value = max(value, minimax(n))
+				value = max(value, self.minimax(n))
+				#self.svdict[state] = value
+			self.svdict[state] = value
+			#self.pdict[state] = state.child
 			return value
-		elif state.player == chance_player:
+		elif state.player == 'CHANCE':
 			value = 0
 			for n in state.child:
 				count = 0
-				for i in self.board_size-1:
-					for j in self.board_size-1:
+				for i in range(self.board_size):
+					for j in range(self.board_size):
 						if n.tileMatrix[i][j] == 0:
 							count = count + 1
-				value = value + minimax(n)*(1/count)
+				value = value + self.minimax(n)*((1.0)/float(count))
 			return value
 		else:
-			error
+			print('Error')
 	def compute_decision(self):
 		"""Derive a decision"""
 		#Replace the following decision with what you compute
 		#decision = random.randint(0,3)
 		a = State(self.root, 'MAX', 0, 4)
-		Gametree.grow(a, self.depth)
-		myvalue = minimax(self.root)
-		for key,val in svdict:
+
+		#return 1
+		""" Problem line below"""
+		self.grow(a, self.depth)
+
+
+		myvalue = self.minimax(a)
+		print('layer 0')
+		#return 2
+		for key,val in self.svdict.items():
+			print('layer 1')
 			if myvalue == val:
+				print('layer 2')
 				""" key should hold the state with minimax value"""
 				""" *Need logic to return the parent's child whose path is minimax"""
+				#while key != a:
+				#	""" v should be the child of the root whose path is minimax"""
+				#	for k,v in self.pdict.items():
+				#		key = k
+				#		if key == a:
+				#			print(MOVES[v.pre_move])
+				#			return v.pre_move
 				while key != a:
-					""" v should be the child of the root whose path is minimax"""
-					for k,v in pdict:
-						key = k
+					print('layer3')
+					#return 1
+					for k,v in self.pdict.items():
+						if key == k:
+							key = v
 						if key == a:
-							print(MOVES[decision])
-							return v.pre_move
+							print(MOVES[k.pre_move])
+							return k.pre_move
+
+
+		return 1
+
 
 					
 						
@@ -199,7 +249,7 @@ class Simulator:
 		self.tileMatrix = matrix
 		self.total_points = score
 		self.board_size = 4
-		pass
+		
 	def move(self, direction):
 		#self.addToUndo()
 		for i in range(0, direction):
