@@ -70,20 +70,31 @@ class Gametree:
 				b.rotateMatrixClockwise()
 			if b.canMove():
 
-				#b.move(i)
-				""" Check if canMove in a different way"""
-				#if a.tileMatrix != state.tileMatrix:
+			#b.move(i)
+			#Check if canMove in a different way
+			
+			#if a.tileMatrix != state.tileMatrix:
+			#if (self.checkequal(state.tileMatrix,a.tileMatrix)):
 				a.pre_move = i
 				if state.player == 'MAX':
 					a.player = 'CHANCE'
 				else:
 					a.player = 'MAX'
+				""" Line below is the problem"""
 				state.child.append(a)
 				""" State is key with total_points as value"""
 				#self.svdict[a] = a.total_points
 				""" Child is key with Parent as value"""
 				self.pdict[a] = state
+				print('4')
 			
+	def checkequal(self,m1,m2):
+		for i in range(self.board_size):
+			for j in range(self.board_size):
+				if m1[i][j] != m2[i][j]:
+					return False
+		return True
+
 	def grow(self, state, height):
 		"""Grow the full tree from root"""
 #		""" height determines type of AI: 0 = random move, 1 = depth-1 search aka grow_once, 3 = depth-3 search"""
@@ -134,7 +145,7 @@ class Gametree:
 		#n = 0
 		#while n < height:
 
-		print('test')
+		print('in Grow')
 
 		if height == 0:
 			return
@@ -144,9 +155,9 @@ class Gametree:
 				self.grow_once(state)
 				# record dictionary here
 				#n = n + 1
-				height = height - 1
-				for i in state.child:
-					self.grow(i,height)
+				#height = height - 1
+				#for i in state.child:
+				#	self.grow(i,height)
 			else:
 				for i in range(self.board_size):
 					for j in range(self.board_size):
@@ -158,21 +169,24 @@ class Gametree:
 							a.player = 'MAX'
 							state.child.append(a)
 							self.pdict[a] = state
-							height = height - 1
+							#height = height - 1
 							#self.grow_once(a)
 				#n = n + 1
 
-			#height = height - 1
-			#for i in state.child:
-				#self.grow(i,height)
+			height = height - 1
+			for i in state.child:
+				self.grow(i,height)
 
 	def minimax(self, state):
 		"""Compute minimax values on the three"""
 		""" state basically refers to the node"""
+		print('in minimax')
 		if state.child == []:
+			print('terminal')
 			return state.total_points
 		elif state.player == 'MAX':
 			value = float('-inf')
+			print('elif MAX player')
 			for n in state.child:
 				value = max(value, self.minimax(n))
 				#self.svdict[state] = value
@@ -228,8 +242,8 @@ class Gametree:
 							print(MOVES[k.pre_move])
 							return k.pre_move
 
-
-		return 1
+		print('catch')
+		#return 1
 
 
 					
