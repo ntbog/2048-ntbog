@@ -1,27 +1,45 @@
 Boolean Nguyen A12475550 
 
 Random
+
 Score Highest tile
+
 640    64
+
 1264   128
+
 776    64
+
 720    64
+
 1248   128
 
 Depth 1
+
 Score Highest tile
+
 3420   256
+
 3352   256
+
 2892   256 
+
 3340   256 
+
 3928   256
 
 Depth 3
+
 Score Highest tile
+
 15516  1024
+
 10908  1024
+
 12200  1024
+
 12268  1024
+
 12684  1024
 
 Assignment 2: 2048
