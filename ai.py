@@ -84,7 +84,7 @@ class Gametree:
 					#self.svdict[a] = a.total_points
 					""" Child is key with Parent as value"""
 					self.pdict[a] = state
-					print('Grow MAX')
+					#print('Grow MAX')
 			if not children:
 				self.terminal.append(state)			
 
@@ -102,7 +102,7 @@ class Gametree:
 							children.append(a)
 							#self.treechild.append(a)
 							self.pdict[a] = state
-							print('Grow CHANCE')
+							#print('Grow CHANCE')
 		return children
 
 	""" Not used - check if matrix are equal, similarly used like canMove"""
@@ -164,24 +164,26 @@ class Gametree:
 		if state in self.terminal:
 			#print('terminal')
 			#return (state.total_points+((state.highest_tile())/float(3)))
-			#return state.total_points + (0.3*(state.highest_tile()))
-			return state.total_points
+			return state.total_points + (0.3*(state.highest_tile()))
+			#return state.total_points
 		elif state.player == 'MAX':
 			value = float('-inf')
 			#print('elif MAX player')
 			for n in state.child:
-				value = max(value, self.minimax(n))
+				value = (max(value, self.minimax(n)))*1.0
 				#self.svdict[state] = value
 			self.svdict[state] = value
+			#print('value from MAX ', value)
 			#self.pdict[state] = state.child
 			return value
 		elif state.player == 'CHANCE':
-			value = 0
+			value = 0.0
 			for n in state.child:
 				count = len(state.child)
 				if count > 0:
 					value = value + self.minimax(n)*((1.0)/float(count))
 			self.svdict[state] = value
+			#print('value from CHANCE ', value)
 			return value
 		else:
 			print('Error')
@@ -189,21 +191,22 @@ class Gametree:
 		"""Derive a decision"""
 		#Replace the following decision with what you compute
 		#decision = random.randint(0,3)
+		""" Instantiate the state"""
 		a = State(self.root, 'MAX', 0, 4)
 
 		#return 1
-		""" Problem line below"""
+		""" Grow the tree"""
 		self.grow(a, self.depth)
 
 
 		myvalue = self.minimax(a)
-		print('layer 0')
+		#print('layer 0')
 		#return 2
-		#for key,val in self.svdict.items():
-		#	print('layer 1')
-		#	if myvalue == val:
-		#		print('layer 2')
-		#		""" key should hold the state with minimax value"""
+		for key,val in self.svdict.items():
+			#print('layer 1')
+			if myvalue == val:
+				#print('layer 2')
+				""" key should hold the state with minimax value"""
 		#		""" *Need logic to return the parent's child whose path is minimax"""
 				#while key != a:
 				#	""" v should be the child of the root whose path is minimax"""
@@ -212,7 +215,17 @@ class Gametree:
 				#		if key == a:
 				#			print(MOVES[v.pre_move])
 				#			return v.pre_move
-
+				#if key == a:
+				#	print('THIS SHOULD NEVER HAPPEN BEFORE')
+				while key != a:
+					for k,v in self.pdict.items():
+						if key == k:
+							key = v
+						if key == a:
+							print(MOVES[k.pre_move])
+							return k.pre_move
+				#if key == a:
+				#	print('THIS SHOULD NEVER HAPPEN AFTER')
 				#while key != a:
 				#	print('layer3')
 				#	#return 1
@@ -222,12 +235,25 @@ class Gametree:
 				#		if key == a:
 				#			print(MOVES[k.pre_move])
 				#			return k.pre_move
-		for j in a.child:
-			print('layer3')
-			if float(j.total_points) == float(myvalue):
-				print('layer4')
-				print(MOVES[j.pre_move])
-				return j.pre_move
+		#print(myvalue)
+
+		#for k,v in self.svdict.items():
+		#	print('v is ', v)
+		#print('myvalue is', myvalue)
+
+		#for j in a.child:
+		#	print('layer3')
+		#
+		#	#j.total_points = float(j.total_points)
+		#	#j.total_points = 4.0
+		#	print('my pre-move is ',j.pre_move)
+		#	print('j.total_points', type(j.total_points), ' with value ', j.total_points)
+		#	print('myvalue', type(myvalue), ' with value ', myvalue)
+		#	#if True:
+		#	if j.total_points == myvalue:
+		#		print('layer4')
+		#		print(MOVES[j.pre_move])
+		#		return j.pre_move
 
 		print('catch')
 		#return 1
