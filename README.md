@@ -1,33 +1,5 @@
 Boolean Nguyen A12475550 
 
-Random
-
-Score Highest tile
-
-640    64
-
-1264   128
-
-776    64
-
-720    64
-
-1248   128
-
-Depth 1
-
-Score Highest tile
-
-3420   256
-
-3352   256
-
-2892   256 
-
-3340   256 
-
-3928   256
-
 Depth 3
 
 Score Highest tile
@@ -81,15 +53,3 @@ In README, write down the end score and highest tile that you get by running the
 Note that you can press "u" at the end of a game to undo the last move and see the last configuration. Check more keyboard options by reading the code. 
 
 You should see depth-3 search reaching 512 tiles and a score over 5000 quite often, as shown in the movie file. 
-
-Extra credits (4 points)
-------
-While depth-3 search gives ok performance, it can apparently be improved by searching more depth. As the tree gets bigger, you may need to pay attention to the efficiency of the code -- a naive implementation of depth-5 search may make each decision quite slow. 
-
-You get up to 4 extra points if you can engineer the AI to reach 2048 very often, while each step is reasonably smooth when running on a laptop. If that is not challenging enough, check the code to see how you can make the board larger, and you can write your extra-credit report based on this project (message me to discuss the details). 
-
-Note that engineering the evaluation function, for instance by giving some heuristic score for different tile configurations, may help. 
-
-Note
-------
-Make sure to start immediately. You can see that significantly more code is required compared to Assignment 1. At the deadline, Github will automatically save the last commit as your submission. 

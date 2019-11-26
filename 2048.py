@@ -31,7 +31,7 @@ class Game:
 		self.tileMatrix = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]]
 		self.undoMat = []
 	def loop(self, fromLoaded = False):
-		auto = False
+		auto = True
 		if not fromLoaded:
 			self.placeRandomTile()
 			self.placeRandomTile()
@@ -40,7 +40,7 @@ class Game:
 			if auto:
 				if self.checkIfCanGo():
 					#Hint: Check the use of deepcopy
-					ai = Gametree(copy.deepcopy(self.tileMatrix), 3)
+					ai = Gametree(copy.deepcopy(self.tileMatrix), 5)
 					direction = ai.compute_decision()
 					self.move(direction)
 					#comment out the following line if you want to run AI till the end
@@ -96,7 +96,7 @@ class Game:
 				self.surface.blit(label, (i*(400/self.board_size) + 30, j*(400/self.board_size) + 130))
 				self.surface.blit(label2, (10, 20))
 	def printGameOver(self):
-		self.surface.fill(BLACK)
+		#self.surface.fill(BLACK)
 		label = self.scorefont.render("Game Over!", 1, (255,255,255))
 		label2 = self.scorefont.render("Score:" + str(self.total_points), 1, (255,255,255))
 		label3 = self.myfont.render("Press r to restart!", 1, (255,255,255))
