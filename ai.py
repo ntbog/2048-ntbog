@@ -164,7 +164,7 @@ class Gametree:
 		if state in self.terminal:
 			#print('terminal')
 			#return (state.total_points+((state.highest_tile())/float(3)))
-			return state.total_points + (0.3*(state.highest_tile()))
+			return state.total_points + (0.3 * (state.highest_tile()))
 			#return state.total_points
 		elif state.player == 'MAX':
 			value = float('-inf')
