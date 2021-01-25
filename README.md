@@ -1,5 +1,3 @@
-Boolean Nguyen A12475550 
-
 Depth 3
 
 Score Highest tile
